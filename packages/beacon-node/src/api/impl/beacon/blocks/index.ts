@@ -198,10 +198,6 @@ export function getBeaconBlockApi({
 
       chain.logger.verbose("Publishing block assembled from locally cached payload", logCtx);
     } else {
-      // Mechanism for blobs & blocks on builder is implemenented separately in a followup deneb-builder PR
-      if (isSignedBlindedBlockContents(signedBlindedBlockOrContents)) {
-        throw Error("exeutionBuilder not yet implemented for deneb+ forks");
-      }
       const executionBuilder = chain.executionBuilder;
       if (!executionBuilder) throw Error("exeutionBuilder required to publish SignedBlindedBeaconBlock");
       signedBlockOrContents = await executionBuilder.submitBlindedBlock(signedBlindedBlockOrContents);
