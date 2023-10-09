@@ -42,9 +42,9 @@ import {Clock, ClockEvent, IClock} from "../util/clock.js";
 import {ensureDir, writeIfNotExist} from "../util/file.js";
 import {isOptimisticBlock} from "../util/forkChoice.js";
 import {
-  blindedOrFullToFull,
+  blindedOrFullBlockToFull,
+  blindedOrFullBlockToFullBytes,
   getEth1BlockHashFromSerializedBlock,
-  reassembleblindedOrFullBlockToFullBytes,
   TransactionsAndWithdrawals,
 } from "../util/fullOrBlindedBlock.js";
 import {CheckpointStateCache, StateContextCache} from "./stateCache/index.js";
@@ -472,7 +472,7 @@ export class BeaconChain implements IBeaconChain {
 
   async blindedOrFullBlockToFull(block: allForks.FullOrBlindedSignedBeaconBlock): Promise<allForks.SignedBeaconBlock> {
     const info = this.config.getForkInfo(block.message.slot);
-    return blindedOrFullToFull(
+    return blindedOrFullBlockToFull(
       this.config,
       info.seq,
       block,
@@ -481,7 +481,7 @@ export class BeaconChain implements IBeaconChain {
   }
 
   blindedOrFullBlockToFullBytes(forkSeq: ForkSeq, block: Uint8Array): AsyncIterable<Uint8Array> {
-    return reassembleblindedOrFullBlockToFullBytes(
+    return blindedOrFullBlockToFullBytes(
       forkSeq,
       block,
       this.getTransactionsAndWithdrawals(forkSeq, toHexString(getEth1BlockHashFromSerializedBlock(block)))
