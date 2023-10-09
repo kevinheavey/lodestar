@@ -43,8 +43,7 @@ export async function* onBlocksOrBlobSidecarsByRange(
     // Chain of blobs won't change
     for await (const {key, value} of db.finalized.binaryEntriesStream({gte: startSlot, lt: endSlot})) {
       const {name, seq} = chain.config.getForkInfo(db.finalized.decodeKey(key));
-      // It's a bis sus that deleting this line will still let the code compile..
-      // This code MUST include tests to ensure ReqResp works with full or blinded blocks
+
       const chunks: Uint8Array[] = [];
       for await (const chunk of chain.blindedOrFullBlockToFullBytes(seq, value)) {
         chunks.push(chunk);
@@ -82,9 +81,6 @@ export async function* onBlocksOrBlobSidecarsByRange(
           throw new ResponseError(RespStatus.SERVER_ERROR, `No item for root ${block.blockRoot} slot ${block.slot}`);
         }
 
-        // TODO: (matthewkeil)
-        // It's a bis sus that deleting this line will still let the code compile..
-        // This code MUST include tests to ensure ReqResp works with full or blinded blocks
         const {name, seq} = chain.config.getForkInfo(block.slot);
         const chunks: Uint8Array[] = [];
         for await (const chunk of chain.blindedOrFullBlockToFullBytes(seq, blockBytes)) {
