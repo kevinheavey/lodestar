@@ -44,13 +44,8 @@ export async function* onBlocksOrBlobSidecarsByRange(
     for await (const {key, value} of db.finalized.binaryEntriesStream({gte: startSlot, lt: endSlot})) {
       const {name, seq} = chain.config.getForkInfo(db.finalized.decodeKey(key));
 
-      const chunks: Uint8Array[] = [];
-      for await (const chunk of chain.blindedOrFullBlockToFullBytes(seq, value)) {
-        chunks.push(chunk);
-      }
-
       yield {
-        data: Buffer.concat(chunks),
+        data: await chain.blindedOrFullBlockToFullBytes(seq, value),
         fork: name,
       };
     }
@@ -82,12 +77,9 @@ export async function* onBlocksOrBlobSidecarsByRange(
         }
 
         const {name, seq} = chain.config.getForkInfo(block.slot);
-        const chunks: Uint8Array[] = [];
-        for await (const chunk of chain.blindedOrFullBlockToFullBytes(seq, blockBytes)) {
-          chunks.push(chunk);
-        }
+
         yield {
-          data: Buffer.concat(chunks),
+          data: await chain.blindedOrFullBlockToFullBytes(seq, blockBytes),
           fork: name,
         };
       }
