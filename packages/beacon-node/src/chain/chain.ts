@@ -671,9 +671,6 @@ export class BeaconChain implements IBeaconChain {
         "payload body not found by eth1 engine"
       );
     }
-    if (forkSeq >= ForkSeq.capella && !payload.withdrawals) {
-      throw new Eth1Error({code: Eth1ErrorCode.INVALID_PAYLOAD_BODY, blockHash}, "no withdrawals in payload body");
-    }
     return payload;
   }
 
