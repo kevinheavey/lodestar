@@ -791,7 +791,7 @@ export class BeaconChain implements IBeaconChain {
         this.producedBlobSidecarsCache,
         this.opts.maxCachedBlobSidecars ?? DEFAULT_MAX_CACHED_BLOB_SIDECARS
       );
-      this.metrics?.blockProductionCaches.producedBlobSidecarsCache.set(this.producedBlockRoot.size);
+      this.metrics?.blockProductionCaches.producedBlobSidecarsCache.set(this.producedBlobSidecarsCache.size);
     }
 
     const metrics = this.metrics;
